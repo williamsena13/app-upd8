@@ -1,14 +1,11 @@
 <template>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-header">Dashboard</div>
-          <div class="card-body">Bem-vindo</div>
-        </div>
-      </div>
+  <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div
+      class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+    >
+      <h1 class="h2">Home</h1>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>
