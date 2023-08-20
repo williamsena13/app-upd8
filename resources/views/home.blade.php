@@ -107,7 +107,7 @@
                             <router-link class="nav-link d-flex align-items-center gap-2" to="/home">
                                 <svg class="bi">
                                     <use xlink:href="#graph-up" /></svg>
-                                Dashboard
+                                Home
                             </router-link>
                         </li>
                         <li class="nav-item">
@@ -119,7 +119,7 @@
                         </li>
                     </ul>
 
-
+                    <!--
                     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
                         <span>Saved reports</span>
                     </h6>
@@ -140,7 +140,7 @@
                             </a>
                         </li>
                     </ul>
-
+-->
                 </div>
             </div>
         </div>

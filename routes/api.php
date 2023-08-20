@@ -17,6 +17,9 @@ use App\Http\Controllers\API\ClientesController;
 
 Route::apiResource('clientes', ClientesController::class);
 
+Route::get('countCustomers', [ClientesController::class, 'countCustomers']);
+
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

@@ -9,5 +9,3 @@ app.use(router); // Use o Vue Router
 
 
 app.mount('#app');
-
-// Aqui você também pode fazer outras configurações ou importações se necessário

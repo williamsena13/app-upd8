@@ -42,4 +42,9 @@ class ClientesController extends Controller
         return ApiResponse::success(null, 'Cliente removido com sucesso.');
     }
 
+    public function countCustomers()
+    {
+        return ApiResponse::success(Cliente::count(), 'Nº de Clientes encontrado com sucesso.');
+    }
+
 }
