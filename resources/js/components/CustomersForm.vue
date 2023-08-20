@@ -8,14 +8,14 @@
     <form @submit.prevent="gravarCliente" class="row">
       <div class="row g-3 align-items-center mb-3">
         <div class="col-auto">
-          <label for="nomeCompleto" class="form-label">Nome Completo</label>
+          <label for="nome_completo" class="form-label">Nome Completo</label>
         </div>
         <div class="col-auto">
           <input
             type="text"
             class="form-control"
-            id="nomeCompleto"
-            v-model="formData.nomeCompleto"
+            id="nome_completo"
+            v-model="formData.nome_completo"
             required
           />
         </div>
@@ -34,7 +34,7 @@
         </div>
 
         <div class="col-auto">
-          <label for="dataNascimento" class="form-label"
+          <label for="data_nascimento" class="form-label"
             >Data de Nascimento</label
           >
         </div>
@@ -42,8 +42,8 @@
           <input
             type="date"
             class="form-control"
-            id="dataNascimento"
-            v-model="formData.dataNascimento"
+            id="data_nascimento"
+            v-model="formData.data_nascimento"
             required
           />
         </div>
@@ -124,7 +124,7 @@
         <div class="col-auto">
           <input
             type="text"
-            class="form-control"
+            class="form-control text-uppercase"
             id="estado"
             v-model="formData.estado"
             required
@@ -137,7 +137,12 @@
           <button type="submit" class="btn btn-primary">Salvar</button>
         </div>
         <div class="col-auto">
-          <button type="button" class="btn btn-light" @click="limparCampos">
+          <button
+            type="button"
+            class="btn btn-light"
+            @click="limparCampos"
+            v-if="!isEditing"
+          >
             Limpar
           </button>
         </div>
@@ -160,8 +165,8 @@ export default {
       isEditing: false,
       formData: {
         cpf: "",
-        nomeCompleto: "",
-        dataNascimento: "",
+        nome_completo: "",
+        data_nascimento: "",
         sexo: "M",
         endereco: "",
         cidade: "",
@@ -203,10 +208,9 @@ export default {
     },
     editarCliente() {
       const clientId = this.$route.params.id;
-      const apiUrl = `/clientes/${clientId}`;
-
+      console.log(this.formData);
       this.$http
-        .put(apiUrl, this.formData)
+        .put(`/clientes/${clientId}`, this.formData)
         .then((response) => {
           console.log("Cliente editado com sucesso!");
           if (response.status === 200) {
@@ -245,8 +249,8 @@ export default {
     limparCampos() {
       // Limpar os campos do formulário
       this.formData.cpf = "";
-      this.formData.nomeCompleto = "";
-      this.formData.dataNascimento = "";
+      this.formData.nome_completo = "";
+      this.formData.data_nascimento = "";
       this.formData.sexo = "M";
       this.formData.endereco = "";
       this.formData.cidade = "";
@@ -258,15 +262,15 @@ export default {
         this.limparCampos();
         return;
       }
-      this.formData = {
-        cpf: clientData.cpf,
-        nomeCompleto: clientData.nome_completo,
-        dataNascimento: clientData.data_nascimento,
-        sexo: clientData.sexo,
-        endereco: clientData.endereco,
-        cidade: clientData.cidade,
-        estado: clientData.estado,
-      };
+
+      this.formData.cpf = clientData.cpf;
+      this.formData.nome_completo = clientData.nome_completo;
+      this.formData.data_nascimento = clientData.data_nascimento;
+      this.formData.sexo = clientData.sexo;
+      this.formData.endereco = clientData.endereco;
+      this.formData.cidade = clientData.cidade;
+      this.formData.estado = clientData.estado.toUpperCase();
+      this.errors = [];
     },
   },
   mounted() {

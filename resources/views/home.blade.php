@@ -144,7 +144,12 @@
                 </div>
             </div>
         </div>
+        @auth
+        <input type="hidden" id="authToken" value="{{ auth()->user()->token }}">
+        @endauth
         <router-view></router-view>
     </div>
 </div>
+
+
 @endsection

@@ -5,8 +5,22 @@ const axiosInstance = axios.create({
   frontURL: "/",
 });
 
-axiosInstance.interceptors.request.use(request => {
-  return request;
+// Adicionando um interceptor para todas as requisições
+axiosInstance.interceptors.request.use(config => {
+  // Obtendo o token do input hidden
+  console.log("VOU PEGAR TOKEN");
+  //const authTokenInput = document.querySelector('#authToken');]
+  console.log(document.getElementById('authToken'));
+  console.log(document.getElementById('authToken').value);
+  const authTokenInput = document.getElementById('authToken').value;
+  const token = authTokenInput ? authTokenInput.value : '';
+
+  if (token) {
+    // Adicionando o token ao cabeçalho de autorização
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  return config;
 }, error => {
   return Promise.reject(error);
 });
