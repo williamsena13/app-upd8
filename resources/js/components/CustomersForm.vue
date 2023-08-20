@@ -5,7 +5,7 @@
     >
       <h1 class="h2">Clientes</h1>
     </div>
-    <form @submit.prevent="cadastrarCliente" class="row">
+    <form @submit.prevent="gravarCliente" class="row">
       <div class="row g-3 align-items-center mb-3">
         <div class="col-auto">
           <label for="nomeCompleto" class="form-label">Nome Completo</label>
@@ -157,6 +157,7 @@
 export default {
   data() {
     return {
+      isEditing: false,
       formData: {
         cpf: "",
         nomeCompleto: "",
@@ -170,13 +171,22 @@ export default {
     };
   },
   methods: {
-    cadastrarCliente() {
+    gravarCliente() {
       console.log("cadastrar");
-      axios
-        .post("/api/clientes", this.formData)
+      if (this.isEditing === true) {
+        this.editarCliente();
+      } else {
+        this.cadastrarCliente();
+      }
+    },
+    cadastrarCliente() {
+      this.$http
+        .post("/clientes", this.formData)
         .then((response) => {
           console.log("Cliente cadastrado com sucesso!");
-          // Lógica para fechar o modal e atualizar a lista de clientes
+          if (response.status === 200) {
+            this.$router.push({ name: "customer.index" });
+          }
         })
         .catch((error) => {
           if (
@@ -191,6 +201,47 @@ export default {
           }
         });
     },
+    editarCliente() {
+      const clientId = this.$route.params.id;
+      const apiUrl = `/clientes/${clientId}`;
+
+      this.$http
+        .put(apiUrl, this.formData)
+        .then((response) => {
+          console.log("Cliente editado com sucesso!");
+          if (response.status === 200) {
+            this.$router.push({ name: "customer.index" });
+          }
+        })
+        .catch((error) => {
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.errors
+          ) {
+            this.errors = Object.values(error.response.data.errors).flat();
+          } else {
+            console.error("Erro ao editar cliente:");
+            console.log(error);
+          }
+        });
+    },
+    buscarCliente(clientId) {
+      this.$http
+        .get(`/clientes/${clientId}`)
+        .then((response) => {
+          const clientData = response.data; // Assuming the API response structure matches your client data structure
+          if (response.status === 200) {
+            console.log("Vou popular com:");
+            console.log(response.data.data);
+            this.popularCampos(response.data.data);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching client data:", error);
+        });
+    },
+
     limparCampos() {
       // Limpar os campos do formulário
       this.formData.cpf = "";
@@ -202,6 +253,28 @@ export default {
       this.formData.estado = "";
       this.errors = [];
     },
+    popularCampos(clientData) {
+      if (clientData === null) {
+        this.limparCampos();
+        return;
+      }
+      this.formData = {
+        cpf: clientData.cpf,
+        nomeCompleto: clientData.nome_completo,
+        dataNascimento: clientData.data_nascimento,
+        sexo: clientData.sexo,
+        endereco: clientData.endereco,
+        cidade: clientData.cidade,
+        estado: clientData.estado,
+      };
+    },
+  },
+  mounted() {
+    const clientId = this.$route.params.id; // Get the client ID from the route parameters
+    if (clientId) {
+      this.isEditing = true;
+      this.buscarCliente(clientId);
+    }
   },
 };
 </script>

@@ -9,7 +9,7 @@
           <button
             type="button"
             class="btn btn-sm btn-outline-secondary"
-            disabled
+            @click="callAlert()"
           >
             Exportar
           </button>
@@ -37,7 +37,11 @@
         <tbody>
           <tr v-for="cliente in clientes" :key="cliente.id">
             <td>
-              <button class="btn btn-sm btn-success">Editar</button>
+              <router-link
+                :to="'/clientes/editar/' + cliente.id"
+                class="btn btn-sm btn-success"
+                >Editar</router-link
+              >
             </td>
             <td>
               <button
@@ -103,13 +107,9 @@ export default {
       return `${dia}/${mes}/${ano}`;
     },
     buscarClientes() {
-      axios.get("/api/clientes").then((response) => {
-        console.log("Resposta");
+      this.$http.get("/clientes").then((response) => {
         try {
-          console.log(response);
-          console.log(response.data);
           if (response.status == 200) {
-            console.log(response.data.data.data);
             if (response.data.data.data) {
               this.clientes = response.data.data.data;
             } else {
@@ -124,22 +124,18 @@ export default {
     },
     excluirCliente(id) {
       if (confirm("Tem certeza de que deseja excluir este cliente?")) {
-        axios
-          .delete(`/api/clientes/${id}`)
+        this.$http
+          .delete(`/clientes/${id}`)
           .then((response) => {
-            if (response.status === 204) {
-              // Cliente excluído com sucesso, atualize a lista de clientes
-              this.clientes = this.clientes.filter(
-                (cliente) => cliente.id !== id
-              );
-            }
-
             this.buscarClientes();
           })
           .catch((error) => {
             console.error("Erro ao excluir o cliente:", error);
           });
       }
+    },
+    callAlert() {
+      this.$swal("TESTE SOM");
     },
   },
 };

@@ -10,7 +10,8 @@ const routes = [
   { path: '/home', component: DashboardComponent },
   { path: '/exemplo', component: ExampleComponent },
   { path: '/clientes', name: 'customer.index' , component: CustomerList },
-  { path: '/clientes/novo', name: 'customer.create' , component: CustomersForm }
+  { path: '/clientes/novo', name: 'customer.create' , component: CustomersForm },
+  { path: "/clientes/editar/:id",name: "editar-cliente",component: CustomersForm  },
   
 ];
 

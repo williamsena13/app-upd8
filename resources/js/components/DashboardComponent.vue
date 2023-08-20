@@ -53,8 +53,8 @@ export default {
     async buscarClientes() {
       try {
         console.log("Vou buscar!");
-        await axios
-          .get("api/countCustomers") // Altere a URL para a rota correta
+        await this.$http
+          .get("/countCustomers") // Altere a URL para a rota correta
           .then((response) => {
             console.log(response);
             console.log(response.status);
