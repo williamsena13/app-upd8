@@ -80,21 +80,22 @@
 import FiltrosClientes from "./CustomersFilter.vue";
 
 export default {
-  //created() {
-  //  eventBus.$on("buscar-clientes-event", this.buscarClientes);
-  //},
-  //beforeDestroy() {
-  //  eventBus.$off("buscar-clientes-event", this.buscarClientes);
-  //},
+  inject: ["eventBus"],
+
   data() {
     return {
       clientes: [], // Array to hold client data
+      param: [],
     };
   },
   components: {
     FiltrosClientes,
   },
   mounted() {
+    this.eventBus.on("search-customer-list", (param) => {
+      this.param = param;
+      this.buscarClientes();
+    });
     this.buscarClientes();
   },
   methods: {
@@ -119,9 +120,10 @@ export default {
       return `${dia}/${mes}/${ano}`;
     },
     buscarClientes() {
-      console.log("Vou buscar");
-      this.$http.get("/clientes").then((response) => {
+      this.$http.get("/clientes", { params: this.param }).then((response) => {
         try {
+          console.log("RETORNO");
+          console.log(response);
           if (response.status == 200) {
             if (response.data.data.data) {
               this.clientes = response.data.data.data;

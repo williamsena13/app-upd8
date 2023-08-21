@@ -86,18 +86,6 @@
             />
             <label class="form-check-label" for="sexoO">Outro</label>
           </div>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="sexo"
-              id="sexoT"
-              value="T"
-              v-model="sexo"
-              required
-            />
-            <label class="form-check-label" for="sexoT">Todos</label>
-          </div>
         </div>
       </div>
     </div>
@@ -154,6 +142,7 @@
   <script>
 export default {
   name: "FiltrosClientes",
+  inject: ["eventBus"],
   data() {
     return {
       cpf: "",
@@ -200,7 +189,46 @@ export default {
       this.selectedState = "";
       this.cities = [];
     },
-    filtrarClientes() {},
+    filtrarClientes() {
+      const queryParams = {};
+
+      if (this.cpf !== "") {
+        queryParams.cpf = this.cpf;
+      }
+      if (this.nome_completo !== "") {
+        queryParams.nome_completo = this.nome_completo;
+      }
+      if (this.data_nascimento !== "") {
+        queryParams.data_nascimento = this.data_nascimento;
+      }
+      if (this.sexo !== "") {
+        queryParams.sexo = this.sexo;
+      }
+      if (this.cidade !== "") {
+        queryParams.cidade = this.cidade;
+      }
+      if (this.selectedState !== "") {
+        queryParams.estado = this.selectedState;
+      }
+
+      try {
+        console.log("aqui");
+        if (
+          queryParams.cpf === "" &&
+          queryParams.nome_completo === "" &&
+          queryParams.data_nascimento === "" &&
+          queryParams.sexo === "" &&
+          queryParams.cidade === "" &&
+          queryParams.estado === ""
+        ) {
+          this.eventBus.emit("search-customer-list", null);
+        } else {
+          this.eventBus.emit("search-customer-list", queryParams);
+        }
+      } catch (error) {
+        this.eventBus.emit("search-customer-list", null);
+      }
+    },
   },
   mounted() {
     this.loadStates();

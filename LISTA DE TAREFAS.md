@@ -1,10 +1,13 @@
 # LISTA DE TAREFAS
-- Incluir datatable comunicando com paginate do laravel
-- Incluir pesquisas e filtros
+
+- Incluir evento para Filtros
+- Ajustar mensages de validação de campos
+- Incluir Paginação na Grid
 - Incluir Switalert
-- Exportar dados para PDF
+
 - Retirar botão Adicionar (Azul)
 - Incluir Fontawsome
-- Fazer Mobile-First
 - Incluir Logout navbar
+- Fazer Mobile-First
 - fazer readme.md para executar o projeto.
+- Exportar dados para PDF

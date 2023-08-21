@@ -15,9 +15,33 @@ class ClientesController extends Controller
     public function index(Request $request)
     {
         $nrPaginate = $request->paginate ?? 10;
-        $clientes = Cliente::paginate($nrPaginate);
+        $query = Cliente::query();
+
+        if ($request->has('cpf')) {
+            $query->where('cpf', 'LIKE', '%' . $request->cpf. '%');
+        }
+        if ($request->has('nome_completo')) {
+            $query->where('nome_completo', 'LIKE', '%' . $request->nome_completo . '%');
+        }
+        if ($request->has('data_nascimento')) {
+            $query->where('data_nascimento', $request->data_nascimento);
+        }
+        if ($request->has('sexo')) {
+            $query->where('sexo', $request->sexo);
+        }
+        if ($request->has('cidade')) {
+            $query->where('cidade', 'LIKE', '%' . $request->cidade . '%');
+        }
+        if ($request->has('estado')) {
+            $query->where('estado', $request->estado);
+        }
+        
+
+        $clientes = $query->paginate($nrPaginate);
+
         return ApiResponse::success($clientes);
     }
+
 
     public function store(StoreClienteRequest $request)
     {
@@ -46,5 +70,4 @@ class ClientesController extends Controller
     {
         return ApiResponse::success(Cliente::count(), 'Nº de Clientes encontrado com sucesso.');
     }
-
 }
