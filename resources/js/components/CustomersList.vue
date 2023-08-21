@@ -184,7 +184,6 @@ export default {
     },
     callAlert() {
       this.$http.get("/export-pdf").then((response) => {
-        // A resposta contém o PDF para download
         const blob = new Blob([response.data], { type: "application/pdf" });
         const link = document.createElement("a");
         link.href = window.URL.createObjectURL(blob);
