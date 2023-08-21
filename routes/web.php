@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/export-pdf', [App\Http\Controllers\API\ClientesController::class, 'exportToPdf']);
 
 Auth::routes();
 

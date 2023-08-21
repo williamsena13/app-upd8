@@ -9,6 +9,7 @@ use App\Http\Requests\Cliente\StoreClienteRequest;
 use App\Http\Requests\Cliente\UpdateClienteRequest;
 use Illuminate\Http\Request;
 use App\Helpers\ApiResponse;
+use PDF;
 
 class ClientesController extends Controller
 {
@@ -69,5 +70,18 @@ class ClientesController extends Controller
     public function countCustomers()
     {
         return ApiResponse::success(Cliente::count(), 'Nº de Clientes encontrado com sucesso.');
+    }
+
+    public function exportToPdf(Request $request)
+    {
+        $clientes = Cliente::all();
+        try {
+            $pdf = PDF::loadView('customers.pdf', compact('clientes'));
+            $formattedDate = date('YmdHis');    
+            return $pdf->download("{$formattedDate}_clientes.pdf");
+            
+        } catch (\Exception $e) {
+            return ApiResponse::error( "Erro ao imprimir PDF", 500 );
+        }
     }
 }
