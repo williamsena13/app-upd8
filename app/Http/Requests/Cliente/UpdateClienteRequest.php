@@ -20,9 +20,9 @@ class UpdateClienteRequest extends FormRequest
     public function rules()
     {
         return [
-            'cpf' => 'required|digits:11|unique:clientes,cpf,',
-            'nomeCompleto' => 'required|string|max:255',
-            'dataNascimento' => 'required|date',
+            //'cpf' => 'required|digits:11|unique:clientes,cpf,' . $this->route('cliente'),
+            'nome_completo' => 'required|string|max:255',
+            'data_nascimento' => 'required|date',
             'sexo' => 'required|in:M,F,O',
             'endereco' => 'required|string|max:255',
             'estado' => 'required|string|max:2',

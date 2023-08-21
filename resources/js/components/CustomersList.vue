@@ -19,6 +19,7 @@
         </router-link>
       </div>
     </div>
+    <FiltrosClientes />
     <div class="table-responsive small">
       <table class="table table-striped table-sm">
         <thead>
@@ -76,11 +77,22 @@
 </template>
 
 <script>
+import FiltrosClientes from "./CustomersFilter.vue";
+
 export default {
+  //created() {
+  //  eventBus.$on("buscar-clientes-event", this.buscarClientes);
+  //},
+  //beforeDestroy() {
+  //  eventBus.$off("buscar-clientes-event", this.buscarClientes);
+  //},
   data() {
     return {
       clientes: [], // Array to hold client data
     };
+  },
+  components: {
+    FiltrosClientes,
   },
   mounted() {
     this.buscarClientes();
@@ -107,6 +119,7 @@ export default {
       return `${dia}/${mes}/${ano}`;
     },
     buscarClientes() {
+      console.log("Vou buscar");
       this.$http.get("/clientes").then((response) => {
         try {
           if (response.status == 200) {
