@@ -1,5 +1,5 @@
 <template>
-  <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div>
     <div
       class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
     >
@@ -66,6 +66,34 @@
       </table>
     </div>
 
+    <nav class="text-center">
+      <ul class="pagination">
+        <li class="page-item" :class="{ disabled: currentPage === 1 }">
+          <a
+            class="page-link"
+            href="#"
+            tabindex="-1"
+            aria-disabled="true"
+            @click="changePage(currentPage - 1)"
+            >Anterior</a
+          >
+        </li>
+        <li
+          class="page-item"
+          v-for="page in totalPages"
+          :key="page"
+          :class="{ active: currentPage === page }"
+        >
+          <a class="page-link" href="#" @click="changePage(page)">{{ page }}</a>
+        </li>
+        <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+          <a class="page-link" href="#" @click="changePage(currentPage + 1)"
+            >Próximo</a
+          >
+        </li>
+      </ul>
+    </nav>
+
     <div
       class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle"
     >
@@ -73,7 +101,7 @@
         Adicionar
       </router-link>
     </div>
-  </main>
+  </div>
 </template>
 
 <script>
@@ -84,8 +112,10 @@ export default {
 
   data() {
     return {
-      clientes: [], // Array to hold client data
+      clientes: [],
       param: [],
+      currentPage: 1,
+      totalPages: 1,
     };
   },
   components: {
@@ -120,16 +150,19 @@ export default {
       return `${dia}/${mes}/${ano}`;
     },
     buscarClientes() {
-      this.$http.get("/clientes", { params: this.param }).then((response) => {
+      const params = { ...this.param, page: this.currentPage };
+
+      this.$http.get("/clientes", { params }).then((response) => {
         try {
           console.log("RETORNO");
           console.log(response);
-          if (response.status == 200) {
+          if (response.status === 200) {
             if (response.data.data.data) {
               this.clientes = response.data.data.data;
             } else {
               this.clientes = response.data.data;
             }
+            this.totalPages = response.data.data.last_page;
           }
         } catch (error) {
           console.log("Erro");
@@ -150,7 +183,6 @@ export default {
       }
     },
     callAlert() {
-      this.$swal("TESTE SOM");
       this.$http.get("/export-pdf").then((response) => {
         // A resposta contém o PDF para download
         const blob = new Blob([response.data], { type: "application/pdf" });
@@ -159,6 +191,12 @@ export default {
         link.download = "clientes.pdf";
         link.click();
       });
+    },
+    changePage(pageNumber) {
+      if (pageNumber > 0 && pageNumber <= this.totalPages) {
+        this.currentPage = pageNumber;
+        this.buscarClientes();
+      }
     },
   },
 };
