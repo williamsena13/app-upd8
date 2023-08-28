@@ -106,29 +106,36 @@
         </div>
 
         <div class="col-auto">
-          <label for="cidade" class="form-label">Cidade</label>
+          <label for="estado" class="form-label">Estado:</label>
         </div>
         <div class="col-auto">
-          <input
-            type="text"
-            class="form-control"
-            id="cidade"
-            v-model="formData.cidade"
-            required
-          />
+          <select
+            class="form-select"
+            id="estado"
+            v-model="formData.estado"
+            @change="loadCities"
+          >
+            <option value="" disabled>Selecionar estado</option>
+            <option
+              v-for="state in states"
+              :key="state.sigla"
+              :value="state.sigla"
+            >
+              {{ state.nome }}
+            </option>
+          </select>
         </div>
 
         <div class="col-auto">
-          <label for="estado" class="form-label">Estado</label>
+          <label for="cidade" class="form-label">Cidade:</label>
         </div>
         <div class="col-auto">
-          <input
-            type="text"
-            class="form-control text-uppercase"
-            id="estado"
-            v-model="formData.estado"
-            required
-          />
+          <select class="form-select" id="cidade" v-model="formData.cidade">
+            <option value="" disabled>Filtrar por Cidade</option>
+            <option v-for="city in cities" :key="city" :value="city">
+              {{ city }}
+            </option>
+          </select>
         </div>
       </div>
 
@@ -173,9 +180,36 @@ export default {
         estado: "",
       },
       errors: [], // Array para armazenar mensagens de erro
+      states: [],
+      cities: [],
     };
   },
   methods: {
+    async loadStates() {
+      try {
+        const response = await this.$http.get(
+          "https://servicodados.ibge.gov.br/api/v1/localidades/estados"
+        );
+        this.states = response.data;
+      } catch (error) {
+        console.error("Error loading states:", error);
+      }
+    },
+    async loadCities() {
+      console.log("cidades");
+      if (this.formData.estado) {
+        try {
+          const response = await this.$http.get(
+            `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${this.formData.estado}/municipios`
+          );
+          this.cities = response.data.map((city) => city.nome);
+        } catch (error) {
+          console.error("Error loading cities:", error);
+        }
+      } else {
+        this.cities = [];
+      }
+    },
     gravarCliente() {
       console.log("cadastrar");
       if (this.isEditing === true) {
@@ -270,11 +304,15 @@ export default {
       this.formData.endereco = clientData.endereco;
       this.formData.cidade = clientData.cidade;
       this.formData.estado = clientData.estado.toUpperCase();
+      console.log("aqui");
+      this.loadStates();
+      this.loadCities();
       this.errors = [];
     },
   },
   mounted() {
     const clientId = this.$route.params.id; // Get the client ID from the route parameters
+    this.loadStates();
     if (clientId) {
       this.isEditing = true;
       this.buscarCliente(clientId);

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: "http://api-upd8.test/api",
+  baseURL: "http://app-upd8.test/api",
   frontURL: "/",
 });
 

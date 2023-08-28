@@ -138,7 +138,7 @@
     </div>
   </div>
 </template>
-  
+
   <script>
 export default {
   name: "FiltrosClientes",
@@ -188,6 +188,7 @@ export default {
       this.cidade = "";
       this.selectedState = "";
       this.cities = [];
+      this.filtrarClientes();
     },
     filtrarClientes() {
       const queryParams = {};
@@ -235,8 +236,7 @@ export default {
   },
 };
 </script>
-  
+
   <style scoped>
 /* Add any additional styling here */
 </style>
-  
