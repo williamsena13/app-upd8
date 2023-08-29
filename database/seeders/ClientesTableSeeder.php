@@ -15,7 +15,6 @@ class ClientesTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        // Defina a quantidade de registros que deseja gerar
         $quantidadeRegistros = 10;
 
         for ($i = 0; $i < $quantidadeRegistros; $i++) {
